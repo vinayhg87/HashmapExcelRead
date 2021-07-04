@@ -10,14 +10,14 @@ import java.util.Map;
 public class Caller {
 
     public static void main(String[] args) throws IOException, InvalidFormatException,
-            ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
+                    ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+                           InstantiationException, IllegalAccessException {
 
         excelOperation excel = new excelOperation();
 
         /* Life Events Test cases */
         String sheetName = "Life Events";
-        Map<String, Map<String, String>> excelData = excel.getExcelAsMap(sheetName);
+        Map<String, Map<String, String>> excelData = excel.getExcelDataAsMap(sheetName);
         int rowCount = excel.RowCount(sheetName);
         for (String rowNum : excelData.keySet()) {
             if (!(excelData.get(rowNum).get("TestCase Status")).equalsIgnoreCase("PASS")

@@ -11,7 +11,7 @@ public class Testcase_453178 {
         log.info("Start of Execution : Testcase_453178");
         excelOperation excel = new excelOperation();
         try {
-            Map<String, Map<String, String>> excelData = excel.getExcelAsMap(sheetname);
+            Map<String, Map<String, String>> excelData = excel.getExcelDataAsMap(sheetname);
             System.out.println(excelData.get(rowNum).get("LastName1"));
             excel.excelWrite(sheetname, Integer.parseInt(rowNum),
                     excel.GetCellNumber(sheetname, "TestCase Status"), "PASS");

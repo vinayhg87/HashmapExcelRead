@@ -13,7 +13,7 @@ public class Testcase_453181 {
         log.info("Start of Execution : Testcase_453181");
         excelOperation excel = new excelOperation();
         try {
-            Map<String, Map<String, String>> excelData = excel.getExcelAsMap(sheetName);
+            Map<String, Map<String, String>> excelData = excel.getExcelDataAsMap(sheetName);
             System.out.println(excelData.get(rowNum).get("LastName1"));
             excel.excelWrite(sheetName, Integer.parseInt(rowNum),
                     excel.GetCellNumber(sheetName, "TestCase Status"), "PASS");

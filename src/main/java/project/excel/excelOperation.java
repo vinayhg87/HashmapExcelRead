@@ -61,7 +61,7 @@ public class excelOperation {
     }
 
 
-    public Map<String, Map<String, String>> getExcelAsMap(String sheetName) throws IOException {
+    public Map<String, Map<String, String>> getExcelDataAsMap(String sheetName) throws IOException {
         int rowCount = RowCount(sheetName);
         int cellCount = CellCount(sheetName, rowCount);
         Map<String, Map<String, String>> completeSheetData = new HashMap<String, Map<String, String>>();

@@ -14,15 +14,14 @@ public class Testcase_453182 {
         log.info("Start of Execution : Testcase_453182");
         excelOperation excel = new excelOperation();
         try {
-            Map<String, Map<String, String>> excelData = excel.getExcelDataAsMap(sheetName);
-            System.out.println(excelData.get(rowNum).get("LastName1"));
-            excel.excelWrite(sheetName, Integer.parseInt(rowNum),
-                    excel.GetCellNumber(sheetName, "TestCase Status"), "PASS");
+            Map<String, Map<String, String>> excelData = excel.getExcelData(sheetName);
+            System.out.println(excelData.get(rowNum).get("SUID of FristName1"));
+            System.out.println(excelData.get(rowNum).get("SUID of FristName2"));
+            excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"PASS");
             System.out.println("Testcase_453182 Passed");
         } catch (Exception e) {
             log.error(e);
-            excel.excelWrite(sheetName, Integer.parseInt(rowNum),
-                    excel.GetCellNumber(sheetName, "TestCase Status"), "FAIL");
+            excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"FAIL");
             System.out.println("Testcase_453182 Failed");
 
         }

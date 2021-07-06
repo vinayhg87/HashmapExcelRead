@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,13 +22,22 @@ public class excelOperation {
     }
 
 
-    public String excelRead(String sheetName, int rowNum, int cellNum) throws IOException {
+    public String excelRead(String sheetName, int rowNum, int cellNum) throws Exception {
         String result = null;
         try {
-            result = wb.getSheet(sheetName).getRow(rowNum).getCell(cellNum).getStringCellValue();
-        } catch (NullPointerException e) {
-            log.info("This is an empty cell");
-            excelWrite(sheetName, rowNum, cellNum, " ");
+            Cell cellType = wb.getSheet(sheetName).getRow(rowNum).getCell(cellNum);
+            if (cellType.getCellType() == cellType.CELL_TYPE_NUMERIC) {
+                result = NumberToTextConverter.toText(cellType.getNumericCellValue());
+            } else if (cellType.getCellType() == cellType.CELL_TYPE_STRING) {
+                result = cellType.getStringCellValue();
+            }else if (cellType.getCellType() == cellType.CELL_TYPE_BLANK) {
+                System.out.println("This is an Blank cell");
+            }
+        }
+        catch(NullPointerException e)
+        {
+            System.out.println("This is an empty cell");
+            excelWrite(sheetName,rowNum,cellNum," ");
         }
         return result;
     }
@@ -55,33 +65,43 @@ public class excelOperation {
         return wb.getSheet(sheetName).getLastRowNum();
     }
 
+    public int sheetCount() {
+        return wb.getNumberOfSheets();
+    }
 
-    public int CellCount(String sheetName, int rowNum) {
-        return wb.getSheet(sheetName).getRow(rowNum).getLastCellNum();
+    public String sheetName(int sheetIndex) {
+        return wb.getSheetName(sheetIndex);
     }
 
 
-    public Map<String, Map<String, String>> getExcelDataAsMap(String sheetName) throws IOException {
-        int rowCount = RowCount(sheetName);
-        int cellCount = CellCount(sheetName, rowCount);
-        Map<String, Map<String, String>> completeSheetData = new HashMap<String, Map<String, String>>();
-        List<String> columnHeader = new ArrayList<String>();
+    public int CellCount(String sheetName, int rowNum) {
+        return wb.getSheet(sheetName).getRow(rowNum).getLastCellNum();
+
+    }
+
+
+    public Map<String, Map<String, String>> getExcelData(String sheetName) throws Exception {
+        int lastrowCount = RowCount(sheetName);
+        int lastcellCount = CellCount(sheetName, lastrowCount);
         Sheet sheet = wb.getSheet(sheetName);
+        Map<String, Map<String, String>> fullSheetData = new HashMap<String, Map<String, String>>();
+        List<String> columnHeader = new ArrayList<String>();
         Row row = sheet.getRow(0);
         Iterator<Cell> cellIterator = row.cellIterator();
         while (cellIterator.hasNext()) {
             columnHeader.add(cellIterator.next().getStringCellValue());
         }
-        for (int i = 1; i <= rowCount; i++) {
+        for (int i = 1; i <= lastrowCount; i++) {
             Map<String, String> singleRowData = new HashMap<String, String>();
             Row HeaderRow = sheet.getRow(i);
-            for (int j = 0; j < cellCount; j++) {
+            for (int j = 0; j < lastcellCount; j++) {
+
                 Cell cell = HeaderRow.getCell(j);
                 singleRowData.put(columnHeader.get(j), excelRead(sheetName, i, j));
             }
-            completeSheetData.put(String.valueOf(i), singleRowData);
+            fullSheetData.put(String.valueOf(i), singleRowData);
         }
-        return completeSheetData;
+        return fullSheetData;
     }
 
 
@@ -107,4 +127,26 @@ public class excelOperation {
         return cellNumber;
     }
 
+
+    public void setExcelData(String sheetName, String columnName, int RowNum, String data) throws IOException {
+        int cellNumber = 0;
+        Sheet sheet = wb.getSheet(sheetName);
+        Row row = sheet.getRow(0);
+        List<String> columnHeader = new ArrayList<String>();
+        Iterator<Cell> cellIterator = row.cellIterator();
+        while (cellIterator.hasNext()) {
+            columnHeader.add(cellIterator.next().getStringCellValue());
+        }
+        int rowCount = RowCount(sheetName);
+        int cellCount = CellCount(sheetName, rowCount);
+        for (int i = 1; i <= rowCount; i++) {
+            for (int j = 0; j < cellCount; j++) {
+                if (columnHeader.get(j).contains(columnName)) {
+                    cellNumber = j;
+                    break;
+                }
+            }
+        }
+        excelWrite(sheetName, RowNum, cellNumber, data);
+    }
 }

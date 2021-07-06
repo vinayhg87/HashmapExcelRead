@@ -11,15 +11,13 @@ public class Testcase_453178 {
         log.info("Start of Execution : Testcase_453178");
         excelOperation excel = new excelOperation();
         try {
-            Map<String, Map<String, String>> excelData = excel.getExcelDataAsMap(sheetname);
-            System.out.println(excelData.get(rowNum).get("LastName1"));
-            excel.excelWrite(sheetname, Integer.parseInt(rowNum),
-                    excel.GetCellNumber(sheetname, "TestCase Status"), "PASS");
+            Map<String, Map<String, String>> excelData = excel.getExcelData(sheetname);
+            System.out.println(excelData.get(rowNum).get("FirstName2"));
+            excel.setExcelData(sheetname,"TestCase Status",Integer.parseInt(rowNum),"PASS");
             System.out.println("Testcase_453178 Passed");
         } catch (Exception e) {
             log.error(e);
-            excel.excelWrite(sheetname, Integer.parseInt(rowNum),
-                    excel.GetCellNumber(sheetname, "TestCase Status"), "FAIL");
+            excel.setExcelData(sheetname,"TestCase Status",Integer.parseInt(rowNum),"FAIL");
             System.out.println("Testcase_453178 Failed");
         }
     }

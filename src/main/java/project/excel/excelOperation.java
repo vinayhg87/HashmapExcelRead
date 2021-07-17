@@ -21,7 +21,6 @@ public class excelOperation {
     public excelOperation() throws IOException, InvalidFormatException {
     }
 
-
     public String excelRead(String sheetName, int rowNum, int cellNum) throws Exception {
         String result = null;
         try {
@@ -30,14 +29,12 @@ public class excelOperation {
                 result = NumberToTextConverter.toText(cellType.getNumericCellValue());
             } else if (cellType.getCellType() == cellType.CELL_TYPE_STRING) {
                 result = cellType.getStringCellValue();
-            }else if (cellType.getCellType() == cellType.CELL_TYPE_BLANK) {
+            } else if (cellType.getCellType() == cellType.CELL_TYPE_BLANK) {
                 System.out.println("This is an Blank cell");
             }
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             System.out.println("This is an empty cell");
-            excelWrite(sheetName,rowNum,cellNum," ");
+            excelWrite(sheetName, rowNum, cellNum, " ");
         }
         return result;
     }
@@ -76,7 +73,6 @@ public class excelOperation {
 
     public int CellCount(String sheetName, int rowNum) {
         return wb.getSheet(sheetName).getRow(rowNum).getLastCellNum();
-
     }
 
 
@@ -95,7 +91,6 @@ public class excelOperation {
             Map<String, String> singleRowData = new HashMap<String, String>();
             Row HeaderRow = sheet.getRow(i);
             for (int j = 0; j < lastcellCount; j++) {
-
                 Cell cell = HeaderRow.getCell(j);
                 singleRowData.put(columnHeader.get(j), excelRead(sheetName, i, j));
             }
@@ -148,5 +143,30 @@ public class excelOperation {
             }
         }
         excelWrite(sheetName, RowNum, cellNumber, data);
+    }
+
+
+    public boolean fileCheck() {
+        boolean fileStatusCheck = false;
+        File fileExists = new File(testReportPath);
+        boolean fileLoc = fileExists.exists();
+
+        if (fileLoc) {
+            try {
+                FileOutputStream checkFile = new FileOutputStream(testReportPath, true);
+                checkFile.close();
+                fileStatusCheck = true;
+            }
+
+            catch (Exception e) {
+                log.fatal("FATAL ERROR : " + "data.xlsx" + " is already open. "
+                        + "Please close it and run the program again.");
+                fileStatusCheck = false;
+            }
+        } else {
+            log.fatal("FATAL ERROR : " + "data.xlsx" + " file not found. " + "File should be at " + testReportPath);
+            System.exit(1);
+        }
+        return fileStatusCheck;
     }
 }

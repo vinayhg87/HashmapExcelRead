@@ -15,8 +15,7 @@ public class Testcase_453182 {
         excelOperation excel = new excelOperation();
         try {
             Map<String, Map<String, String>> excelData = excel.getExcelData(sheetName);
-            System.out.println(excelData.get(rowNum).get("SUID of FristName1"));
-            System.out.println(excelData.get(rowNum).get("SUID of FristName2"));
+            System.out.println(excelData.get(rowNum).get("textfield"));
             excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"PASS");
             System.out.println("Testcase_453182 Passed");
         } catch (Exception e) {

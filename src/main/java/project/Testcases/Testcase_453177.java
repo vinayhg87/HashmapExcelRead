@@ -3,6 +3,8 @@ package project.Testcases;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 import project.excel.excelOperation;
 import java.io.IOException;
 import java.util.Map;
@@ -16,11 +18,16 @@ public class Testcase_453177 {
         excelOperation excel = new excelOperation();
         try {
             Map<String, Map<String, String>> excelData = excel.getExcelData(sheetName);
-            System.out.println(excelData.get(rowNum).get("SUID of FristName1"));
-            //excel.excelWrite(sheetName, Integer.parseInt(rowNum), excel.GetCellNumber(sheetName, "TestCase Status"), "PASS");
+            System.out.println(excelData.get(rowNum).get("textfield"));
+            Assert.assertEquals(2,3);
             excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"PASS");
             System.out.println("Testcase_453177 Passed");
-        } catch (Exception e) {
+        }
+        catch(AssertionError e){
+            excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"FAIL");
+            System.out.println("Assert Error");
+        }
+        catch (Exception e) {
             log.error(e);
             excel.setExcelData(sheetName,"TestCase Status",Integer.parseInt(rowNum),"FAIL");
             System.out.println("Testcase_453177 Failed");
